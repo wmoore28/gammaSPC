@@ -1,0 +1,143 @@
+#
+# SPCe.db
+#
+# Macro Definitions:
+#   P     - prefix
+#   PUMP  - pump name
+#   PROTO - protocol file prefix (i.e. $(PROTO).proto)
+#   PORT  - asyn port name
+#
+# Author: Wesley Moore (wmoore@jlab.org)
+#
+
+record(stringin, "$(P)$(PUMP)_model_num") {
+  field(DTYP, "stream")
+  field(INP,  "@$(PROTO).proto getModel $(PORT)")
+  field(PINI, "1")
+}
+
+record(stringin, "$(P)$(PUMP)_version") {
+  field(DTYP, "stream")
+  field(INP,  "@$(PROTO).proto getVersion $(PORT)")
+  field(PINI, "1")
+}
+
+#record(seq, "$(P)$(PUMP)_seq") {
+#   field(DOL1, "1")     field(LNK1, "$(P)$(PUMP)_pressure.PROC")    field(DLY1, "0.0")
+#   field(DOL2, "1")     field(LNK2, "$(P)$(PUMP)_current.PROC")     field(DLY2, "0.5")
+#   field(SCAN, "Passive")
+#}
+
+record(bi, "$(P)$(PUMP)_HV_state") {
+   field(DTYP, "stream")
+   field(INP,  "@$(PROTO).proto getHVstate $(PORT)")
+   field(ZNAM, "Off")
+   field(ONAM, "On")
+   field(SCAN, "1 second")
+   field(FLNK, "$(P)$(PUMP)_current")
+}
+
+record(ai, "$(P)$(PUMP)_current") {
+   field(DTYP, "stream")
+   field(INP,  "@$(PROTO).proto getCurrent $(PORT)")
+   field(EGU,  "A") 
+   field(PREC, "1")
+   field(FLNK, "$(P)$(PUMP)_pressure")
+}
+
+record(ai, "$(P)$(PUMP)_pressure") {
+   field(DTYP, "stream")
+   field(INP,  "@$(PROTO).proto getPressure $(PORT)")
+   field(EGU,  "Torr")
+   field(PREC, "1")
+   field(FLNK, "$(P)$(PUMP)")
+}
+
+record(ai, "$(P)$(PUMP)") {
+   field(INP,  "$(P)$(PUMP)_pressure.VAL")
+   field(EGU,  "Torr")
+   field(PREC, "1")
+   field(FLNK, "$(P)$(PUMP)_pump_size")
+}
+
+record(bo, "$(P)$(PUMP)_units_set") {
+   field(DTYP, "stream")
+   field(OUT,  "@$(PROTO).proto setUnitsTorr $(PORT)")
+}
+
+record(longin, "$(P)$(PUMP)_pump_size") {
+  field(DTYP, "stream")
+  field(INP,  "@$(PROTO).proto getPumpSize $(PORT)")
+  field(EGU,  "l/s")
+  field(HOPR, "1200")
+  field(LOPR, "0")
+  field(FLNK, "$(P)$(PUMP)_auto_restart")
+}
+
+#record(longout, "$(P)$(PUMP)_pump_size_set") {
+#  field(DTYP, "stream")
+#  field(OUT,  "@$(PROTO).proto setPumpSize $(PORT)")
+#  field(EGU,  "l/s")
+#  field(HOPR, "1200")
+#  field(LOPR, "0")
+#  field(DRVH, "1200")
+#  field(DRVL, "0")
+#}
+
+record(ai, "$(P)$(PUMP)_cal_factor") {
+   field(DTYP, "stream")
+   field(INP,  "@$(PROTO).proto getCalFactor $(PORT)")
+   field(HOPR, "9.99")
+   field(LOPR, "0")
+   field(PREC, "2")
+   field(PINI, "1")
+}
+
+#record(ao, "$(P)$(PUMP)_cal_factor_set") {
+#   field(DTYP, "stream")
+#   field(OUT,  "@$(PROTO).proto setCalFactor $(PORT)")
+#   field(HOPR, "9.99")
+#   field(LOPR, "0")
+#   field(DRVH, "9.99")
+#   field(DRVL, "0.01")
+#   field(PREC, "2")
+#}
+
+record(bi, "$(P)$(PUMP)_auto_restart") {
+   field(DTYP, "stream")
+   field(INP,  "@$(PROTO).proto getAutoRestart $(PORT)")
+   field(ZNAM, "No")
+   field(ONAM, "Yes")
+   field(PINI, "1")
+}
+
+record(bo, "$(P)$(PUMP)_auto_restart_set") {
+   field(DTYP, "stream")
+   field(OUT,  "@$(PROTO).proto setAutoRestart $(PORT)")
+   field(ZNAM, "No")
+   field(ONAM, "Yes")
+}
+
+record(bo, "$(P)$(PUMP)_start") {
+   field(DTYP, "stream")
+   field(OUT,  "@$(PROTO).proto startPump $(PORT)")
+}
+
+record(bo, "$(P)$(PUMP)_stop") {
+   field(DTYP, "stream")
+   field(OUT,  "@$(PROTO).proto stopPump $(PORT)")
+}
+
+#record(ao, "$(P)$(PUMP)_on_setpoint") {
+#   field(DTYP, "Soft Channel")
+#}
+
+#record(ao, "$(P)$(PUMP)_off_setpoint") {
+#   field(DTYP, "Soft Channel")
+#}
+
+#record(bo, "$(P)$(PUMP)_setpoint_set") {
+#   field(DTYP, "stream")
+#   field(OUT,  "@$(PROTO).proto setSetpoint($(P)$(PUMP)) $(PORT)")
+#}
+

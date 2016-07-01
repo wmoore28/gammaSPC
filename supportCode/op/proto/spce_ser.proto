@@ -1,0 +1,91 @@
+#
+# spce_ser.proto - Gamma Vacuum SPC (RS232)
+#
+# Author: Wesley Moore (wmoore@jlab.org)
+#
+
+InTerminator = CR;
+OutTerminator = CR;
+ExtraInput = Ignore;
+
+getModel {
+  out "~ 01 01 %01<sum8>";
+  in  "01 OK 00 %16c %0<sum8>";
+}
+
+getVersion {
+  out "~ 01 02 %01<sum8>";
+  in  "01 OK 00 %25c";
+}
+
+getCurrent {
+  out "~ 01 0A %01<sum8>";
+  in  "01 OK 00 %f AMPS %0<sum8>";
+
+}
+
+getPressure {
+  out "~ 01 0B %01<sum8>";
+  in  "01 OK 00 %f Torr %0<sum8>";
+}
+
+getVoltage {
+  out "~ 01 0C %01<sum8>";
+  in  "01 OK 00 %d %0<sum8>";
+}
+
+setUnitsTorr {
+  out "~ 01 0E T %01<sum8>";
+  in  "01 OK 00 %0<sum8>";
+}
+
+getPumpSize {
+  out "~ 01 11 %01<sum8>";
+  in  "01 OK 00 %d L/S %0<sum8>";
+}
+
+setPumpSize {
+  out "~ 01 12 %d %01<sum8>";
+  in  "01 OK 00 %0<sum8>";
+}
+
+getCalFactor {
+  out "~ 01 1D %01<sum8>";
+  in  "01 OK 00 %f %0<sum8>";
+}
+
+setCalFactor {
+  out "~ 01 1E %3.2f %01<sum8>";
+  in  "01 OK 00 %0<sum8>";
+}
+
+getAutoRestart {
+  out "~ 01 34 %01<sum8>";
+  in  "01 OK 00 %{no|yes} %0<sum8>";
+}
+
+setAutoRestart {
+  out "~ 01 33 %{no|yes} %01<sum8>";
+  in  "01 OK 00 %0<sum8>";
+}
+
+startPump {
+  out "~ 01 37 1 %01<sum8>";
+  in  "01 OK 00 %0<sum8>";
+}
+
+stopPump {
+   out "~ 01 38 1 %01<sum8>";
+   in  "01 OK 00 %0<sum8>";
+}
+
+setSetpoint {
+   out "~ 01 3D 1,1,%(\$1_on_setpoint.VAL)2.1e,%(\$1_off_setpoint.VAL)2.1e %01<sum8>";
+   in  "01 OK 00 %0<sum8>";
+}
+
+getHVstate {
+   out "~ 01 61 1 %01<sum8>";
+   in  "01 OK 00 %{NO|YES} %0<sum8>";
+}
+

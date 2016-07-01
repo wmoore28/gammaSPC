@@ -1,0 +1,94 @@
+#
+# spce_eth.proto - Gamma Vacuum SPCe (Ethernet)
+#
+# Author: Wesley Moore (wmoore@jlab.org)
+#
+
+InTerminator = CR CR LF;
+OutTerminator = CR;
+
+ExtraInput = Ignore;
+
+getModel {
+  out "spc 01"; wait 100;
+  in  ">OK 00 %39c";
+}
+
+getVersion {
+  out "spc 02"; wait 100;
+  in  ">OK 00 FIRMWARE %39c";
+}
+
+getCurrent {
+  out "spc 0A"; wait 100;
+  in  ">OK 00 %E AMPS";
+}
+
+getPressure {
+  out "spc 0B"; wait 100;
+  in  ">OK 00 %E Torr";
+}
+
+getVoltage {
+  out "spc 0C";
+  in  ">OK 00 %d";
+}
+
+setUnitsTorr {
+  out "spc 0E T";
+  in  ">OK 00";
+}
+
+getPumpSize {
+  out "spc 11"; wait 100;
+  in  "OK 00 %04d";
+  @mismatch {
+    in ">OK 00 %04d";
+  }
+}
+
+setPumpSize {
+  out "spc 12 %d";
+  in  ">OK 00";
+}
+
+getCalFactor {
+  out "spc 1D";
+  in  "OK 00 %f";
+}
+
+setCalFactor {
+  out "spc 1E %3.2f";
+  in  "OK 00";
+}
+
+getAutoRestart {
+  out "spc 34"; wait 100;
+  in  ">OK 00 %{no|yes}";
+}
+
+setAutoRestart {
+  out "spc 33 %{NO|YES}";
+  in  "OK 00";
+}
+
+startPump {
+  out "spc 37 1";
+  in  ">OK 00";
+}
+
+stopPump {
+  out "spc 38 1";
+  in  ">OK 00";
+}
+
+#setSetpoint {
+#   out "spc 3D 1,1,%(\$1_on_setpoint.VAL)2.1e,%(\$1_off_setpoint.VAL)2.1e";
+#   in  ">OK 00";
+#}
+
+getHVstate {
+    out "spc 61 1"; wait 100;
+    in  "OK 00 %{NO|YES}";
+}
+

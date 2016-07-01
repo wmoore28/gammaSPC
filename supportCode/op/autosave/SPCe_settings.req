@@ -1,0 +1,8 @@
+%
+% Gamma SPCe ion pump power supplies
+%
+% vacuum pressure alarms
+$(P).LOLO
+$(P).LOW
+$(P).HIGH
+$(P).HIHI
